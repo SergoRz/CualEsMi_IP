@@ -58,7 +58,6 @@ public class CualEsMiIp extends Activity {
         }
     }
 
-
     /**
      * Clase DescargaPaginaWeb, extiende de AsyncTask para ejecutarse en segundo plano sin afectar al
      * hilo principal de la aplicacion.
