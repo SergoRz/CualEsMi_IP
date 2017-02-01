@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,16 +36,12 @@ public class MainActivity extends Activity {
     }
 
     public void Descargar(View v){
-        edURL=(EditText)findViewById(R.id.edURL);
-        txtDescarga=(TextView) findViewById(R.id.txtDescarga);
-        txtDescarga.setMovementMethod(new ScrollingMovementMethod());
-
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             new DescargaPaginaWeb().execute("http://www.cualesmiip.com");
         } else {
-            edURL.setText("No se ha podido establecer conexión a internet");
+            //edURL.setText("No se ha podido establecer conexión a internet");
         }
     }
 
@@ -62,7 +59,7 @@ public class MainActivity extends Activity {
         // onPostExecute visualiza los resultados del AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            txtDescarga.setText(result);
+            //txtDescarga.setText(result);
         }
 
         /**
@@ -88,6 +85,8 @@ public class MainActivity extends Activity {
         private String descargaUrl(String myurl) throws IOException {
             InputStream is = null;
             String linea = null;
+            BufferedReader br = null;
+
             try {
                 URL url = new URL(myurl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -100,7 +99,7 @@ public class MainActivity extends Activity {
                 int response = conn.getResponseCode();
                 is = conn.getInputStream();
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
                 while((linea = br.readLine()) != null){
                     if(linea.contains("Tu IP real es")){
@@ -110,12 +109,15 @@ public class MainActivity extends Activity {
 
                 Pattern patron = Pattern.compile("/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/");
                 //Creamos el Matcher a partir del patron, la cadena como parametro
-                Matcher encaja = patron.matcher("aabmanoloaabmanoloabmanolob");
+                Matcher encaja = patron.matcher(linea);
 
+                String resultado = encaja.toString();
+
+                Log.d("Resultado: ", resultado);
                 //Nos aseguramos de cerrar el inputStream.
             } finally {
                 if (is != null) {
-                    is.close();
+                    br.close();
                 }
             }
 
