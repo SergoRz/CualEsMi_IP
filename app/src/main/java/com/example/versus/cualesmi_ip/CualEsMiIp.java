@@ -63,7 +63,6 @@ public class CualEsMiIp extends Activity {
      * hilo principal de la aplicacion.
      */
     private class DescargaPaginaWeb extends AsyncTask<String, Void, String> {
-
         /**
          * Metodo que se ejecuta al iniciar la clase
          * Se encarga de descargar la pagina web
@@ -80,7 +79,7 @@ public class CualEsMiIp extends Activity {
             }
         }
 
-        /**\
+        /**
          * Visualiza los datos del AsyncTask en el textView tvIP
          * @param result Datos que origina
          */
