@@ -6,12 +6,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -119,7 +117,7 @@ public class MainActivity extends Activity {
                 Log.d("Resultado: ", resultado);
                 //Nos aseguramos de cerrar el inputStream.
             } finally {
-                if (is != null) {
+                if (br != null) {
                     br.close();
                 }
             }
