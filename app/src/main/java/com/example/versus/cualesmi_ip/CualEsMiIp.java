@@ -40,6 +40,7 @@ public class CualEsMiIp extends Activity {
         tvIP = (TextView) findViewById(R.id.tvIP);
     }
 
+
     /**
      * Metodo que se encarga de ejecutar la clase DescargaPaginaWeb que extiende de Asyntask
      * pasandole la pagina que queremos descargar
