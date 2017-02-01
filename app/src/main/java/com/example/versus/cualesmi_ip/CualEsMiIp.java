@@ -142,6 +142,11 @@ public class CualEsMiIp extends Activity {
             return linea;
         }
 
+        /**
+         * Metodo que se encarga de extraer la IP utilizando un patron
+         * @param linea Linea en la que se encuentra la IP
+         * @return Devuelve la primera secuencia que cumple el patron
+         */
         private String extreaerIP(String linea){
             //Se establece un patron
             Pattern patron = Pattern.compile("([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])");
