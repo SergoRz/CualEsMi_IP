@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
         // el contenido de la página web con un InputStream, y que se transforma a un String.
         private String descargaUrl(String myurl) throws IOException {
             InputStream is = null;
-
+            String linea = null;
             try {
                 URL url = new URL(myurl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -100,10 +100,11 @@ public class MainActivity extends Activity {
                 is = conn.getInputStream();
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                String linea = null;
 
-                while(!(linea = br.readLine()).contains("Tu IP real es")){
-
+                while((linea = br.readLine()) != null){
+                    if(linea.contains("Tu IP real es")){
+                        break;
+                    }
                 }
 
                 //Nos aseguramos de cerrar el inputStream.
@@ -112,6 +113,8 @@ public class MainActivity extends Activity {
                     is.close();
                 }
             }
+
+            return linea;
         }
 
     }
