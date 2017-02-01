@@ -112,14 +112,17 @@ public class CualEsMiIp extends Activity {
         }
 
         private String leer(InputStream is) throws IOException {
+            //Se crea un BufferedReader para leer linea a linea
             BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             String linea;
 
+            //Se lee linea a linea hasta que una linea contenga la secuencia "Tu IP real es"
             while((linea = br.readLine()) != null){
                 if(linea.contains("Tu IP real es")){
                     break;
                 }
             }
+            //Se liberan los recusos
             is.close();
             br.close();
 
@@ -127,12 +130,13 @@ public class CualEsMiIp extends Activity {
         }
 
         private String extreaerIP(String linea){
+            //Se establece un patron
             Pattern patron = Pattern.compile("([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])");
-            //Creamos el Matcher a partir del patron, la cadena como parametro
+            //Se crea el Matcher a partir del patron y le pasamos la linea como parametro
             Matcher matcher = patron.matcher(linea);
-
+            //Se busca en la linea todos las secuencias que cumplan el patron
             matcher.find();
-
+            //Devolvemos la primera secuencia que cumple el patron
             return matcher.group(0);
         }
     }
