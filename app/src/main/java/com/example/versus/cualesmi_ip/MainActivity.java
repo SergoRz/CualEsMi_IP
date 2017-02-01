@@ -10,9 +10,13 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -34,11 +38,10 @@ public class MainActivity extends Activity {
         txtDescarga=(TextView) findViewById(R.id.txtDescarga);
         txtDescarga.setMovementMethod(new ScrollingMovementMethod());
 
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new DescargaPaginaWeb().execute(edURL.getText().toString());
+            new DescargaPaginaWeb().execute("http://www.cualesmiip.com");
         } else {
             edURL.setText("No se ha podido establecer conexión a internet");
         }
@@ -46,10 +49,8 @@ public class MainActivity extends Activity {
 
 
     private class DescargaPaginaWeb extends AsyncTask<String, Void, String> {
-
         @Override
         protected String doInBackground(String... urls) {
-
             // los parámetros viene del método execute()
             try {
                 return descargaUrl(urls[0]);
@@ -98,8 +99,12 @@ public class MainActivity extends Activity {
                 int response = conn.getResponseCode();
                 is = conn.getInputStream();
 
-                // convertir el InputStream a string
-                return Leer(is);
+                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                String linea = null;
+
+                while(!(linea = br.readLine()).contains("Tu IP real es")){
+
+                }
 
                 //Nos aseguramos de cerrar el inputStream.
             } finally {
