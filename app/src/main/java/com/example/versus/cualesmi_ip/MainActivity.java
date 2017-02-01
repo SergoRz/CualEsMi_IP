@@ -24,14 +24,14 @@ import java.util.regex.Pattern;
 public class MainActivity extends Activity {
     public final String tag="DescargaHTTP";
     public EditText edURL;
-    public TextView txtDescarga;
+    public TextView tvIP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        txtDescarga = (TextView) findViewById(R.id.tvIP);
+        tvIP = (TextView) findViewById(R.id.tvIP);
 
     }
 
@@ -59,26 +59,9 @@ public class MainActivity extends Activity {
         // onPostExecute visualiza los resultados del AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            //txtDescarga.setText(result);
+            tvIP.setText("Tu IP actual es: " + result);
         }
 
-        /**
-         Este método lee to.do el inputstream convirtiéndolo en una cadena
-         ayudándonos con un ByteArrayOutputStream()
-         */
-        private String Leer(InputStream is) {
-            try {
-                ByteArrayOutputStream bo = new ByteArrayOutputStream();
-                int i = is.read();
-                while(i != -1) {
-                    bo.write(i);
-                    i = is.read();
-                }
-                return bo.toString();
-            } catch (IOException e) {
-                return "";
-            }
-        }
 
         // Dada una URL, establece una conexión HttpUrlConnection y devuelve
         // el contenido de la página web con un InputStream, y que se transforma a un String.
@@ -86,7 +69,7 @@ public class MainActivity extends Activity {
             InputStream is = null;
             String linea = null;
             BufferedReader br = null;
-
+            String resultado = null;
             try {
                 URL url = new URL(myurl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -107,15 +90,13 @@ public class MainActivity extends Activity {
                     }
                 }
 
-                Pattern patron = Pattern.compile("(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])");
+                Pattern patron = Pattern.compile("([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])");
                 //Creamos el Matcher a partir del patron, la cadena como parametro
                 Matcher matcher = patron.matcher(linea);
 
                 matcher.find();
 
-                String resultado = matcher.group(0);
-
-                txtDescarga.setText("Tu IP actual es: " + resultado);
+                resultado = matcher.group(0);
                 //Nos aseguramos de cerrar el inputStream.
             } finally {
                 if (br != null) {
@@ -123,7 +104,7 @@ public class MainActivity extends Activity {
                 }
             }
 
-            return linea;
+            return resultado;
 
         }
 
