@@ -63,6 +63,7 @@ public class CualEsMiIp extends Activity {
      * hilo principal de la aplicacion.
      */
     private class DescargaPaginaWeb extends AsyncTask<String, Void, String> {
+
         /**
          * Metodo que se ejecuta al iniciar la clase
          * Se encarga de descargar la pagina web
@@ -88,8 +89,14 @@ public class CualEsMiIp extends Activity {
             tvIP.setText("Tu IP actual es: " + result);
         }
 
-        // Dada una URL, establece una conexión HttpUrlConnection y devuelve
-        // el contenido de la página web con un InputStream, y que se transforma a un String.
+
+        /**
+         * Dada una URL, establece una conexión HttpUrlConnection y devuelve
+         * el contenido de la página web con un InputStream, y que se transforma a un String.
+         * @param myurl direccion de la pagina web que se descarga
+         * @return Devuelve la IP actual del dispositivo
+         * @throws IOException Excepcion de entrada o salida de datos
+         */
         private String descargaUrl(String myurl) throws IOException {
             InputStream is;
             String linea;
@@ -111,6 +118,12 @@ public class CualEsMiIp extends Activity {
             return resultado;
         }
 
+        /**
+         * Metodo que se encarga de leer y buscar la linea que contiene la direccion IP
+         * @param is InputStream de la conexion
+         * @return Devuelve la linea donde se encuentra la IP
+         * @throws IOException Excepcion de entrada o salida de datos
+         */
         private String leer(InputStream is) throws IOException {
             BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             String linea;
