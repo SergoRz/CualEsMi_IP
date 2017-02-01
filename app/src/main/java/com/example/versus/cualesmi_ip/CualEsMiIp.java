@@ -20,43 +20,70 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-public class MainActivity extends Activity {
-    public final String tag="DescargaHTTP";
-    public EditText edURL;
+/**
+ * Clase CualEsMiIp
+ * Es la clase principal, ejecuta la interface de la aplicacion.
+ */
+public class CualEsMiIp extends Activity {
     public TextView tvIP;
 
+    /**
+     * Metodo que se ejecuta al iniciar la activity
+     * Se encarga de enlazar el TextView del codigo con el de la interfaz
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         tvIP = (TextView) findViewById(R.id.tvIP);
-
     }
 
-    public void Descargar(View v){
+    /**
+     * Metodo que se encarga de ejecutar la clase DescargaPaginaWeb que extiende de Asyntask
+     * pasandole la pagina que queremos descargar
+     * @param v
+     */
+    public void descargar(View v){
+        //Comprueba la conexion
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        //Si hay conexion..
         if (networkInfo != null && networkInfo.isConnected()) {
+            //Se inicia la clase DescargaPaginaWeb
             new DescargaPaginaWeb().execute("http://www.cualesmiip.com");
         } else {
-            //edURL.setText("No se ha podido establecer conexión a internet");
+            tvIP.setText("No se ha podido establecer conexión a internet");
         }
     }
 
 
+    /**
+     * Clase DescargaPaginaWeb, extiende de AsyncTask para ejecutarse en segundo plano sin afectar al
+     * hilo principal de la aplicacion.
+     */
     private class DescargaPaginaWeb extends AsyncTask<String, Void, String> {
+        /**
+         * Metodo que se ejecuta al iniciar la clase
+         * Se encarga de descargar la pagina web
+         * @param urls Conjunto de argumentos
+         * @return Devuelve la pagina web o un mensaje de error
+         */
         @Override
         protected String doInBackground(String... urls) {
             // los parámetros viene del método execute()
             try {
                 return descargaUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "No se puede descargar la pagina web";
             }
         }
-        // onPostExecute visualiza los resultados del AsyncTask.
+
+        /**\
+         * Visualiza los datos del AsyncTask en el textView tvIP
+         * @param result Datos que origina
+         */
         @Override
         protected void onPostExecute(String result) {
             tvIP.setText("Tu IP actual es: " + result);
@@ -66,8 +93,8 @@ public class MainActivity extends Activity {
         // Dada una URL, establece una conexión HttpUrlConnection y devuelve
         // el contenido de la página web con un InputStream, y que se transforma a un String.
         private String descargaUrl(String myurl) throws IOException {
-            InputStream is = null;
-            String linea = null;
+            InputStream is;
+            String linea;
             BufferedReader br = null;
             String resultado = null;
             try {
