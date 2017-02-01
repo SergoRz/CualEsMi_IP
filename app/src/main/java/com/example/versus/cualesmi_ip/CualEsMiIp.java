@@ -40,7 +40,6 @@ public class CualEsMiIp extends Activity {
         tvIP = (TextView) findViewById(R.id.tvIP);
     }
 
-
     /**
      * Metodo que se encarga de ejecutar la clase DescargaPaginaWeb que extiende de Asyntask
      * pasandole la pagina que queremos descargar
@@ -55,7 +54,7 @@ public class CualEsMiIp extends Activity {
             //Se inicia la clase DescargaPaginaWeb
             new DescargaPaginaWeb().execute("http://www.cualesmiip.com");
         } else {
-            tvIP.setText("No se ha podido establecer conexión a internet");
+            tvIP.setText("Tu IP real es: \n No se ha podido establecer conexión a internet");
         }
     }
 
@@ -76,7 +75,7 @@ public class CualEsMiIp extends Activity {
             try {
                 return descargaUrl(urls[0]);
             } catch (IOException e) {
-                return "No se puede descargar la pagina web";
+                return "Tu IP real es: \n No se puede descargar la pagina web";
             }
         }
 
@@ -89,51 +88,52 @@ public class CualEsMiIp extends Activity {
             tvIP.setText("Tu IP actual es: " + result);
         }
 
-
         // Dada una URL, establece una conexión HttpUrlConnection y devuelve
         // el contenido de la página web con un InputStream, y que se transforma a un String.
         private String descargaUrl(String myurl) throws IOException {
             InputStream is;
             String linea;
-            BufferedReader br = null;
-            String resultado = null;
-            try {
-                URL url = new URL(myurl);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000 /* milisegundos */);
-                conn.setConnectTimeout(15000 /* milisegundos */);
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-                // comienza la consulta
-                conn.connect();
-                int response = conn.getResponseCode();
-                is = conn.getInputStream();
+            String resultado;
 
-                br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            URL url = new URL(myurl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(10000 /* milisegundos */);
+            conn.setConnectTimeout(15000 /* milisegundos */);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            //Comienza la consulta
+            conn.connect();
 
-                while((linea = br.readLine()) != null){
-                    if(linea.contains("Tu IP real es")){
-                        break;
-                    }
-                }
-
-                Pattern patron = Pattern.compile("([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])");
-                //Creamos el Matcher a partir del patron, la cadena como parametro
-                Matcher matcher = patron.matcher(linea);
-
-                matcher.find();
-
-                resultado = matcher.group(0);
-                //Nos aseguramos de cerrar el inputStream.
-            } finally {
-                if (br != null) {
-                    br.close();
-                }
-            }
+            is = conn.getInputStream();
+            linea = leer(is);
+            resultado = extreaerIP(linea);
 
             return resultado;
-
         }
 
+        private String leer(InputStream is) throws IOException {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            String linea;
+
+            while((linea = br.readLine()) != null){
+                if(linea.contains("Tu IP real es")){
+                    break;
+                }
+            }
+            is.close();
+            br.close();
+
+            return linea;
+        }
+
+        private String extreaerIP(String linea){
+            Pattern patron = Pattern.compile("([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])");
+            //Creamos el Matcher a partir del patron, la cadena como parametro
+            Matcher matcher = patron.matcher(linea);
+
+            matcher.find();
+
+            return matcher.group(0);
+        }
     }
 }
