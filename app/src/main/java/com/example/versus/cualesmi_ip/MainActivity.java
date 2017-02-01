@@ -107,11 +107,14 @@ public class MainActivity extends Activity {
                     }
                 }
 
-                Pattern patron = Pattern.compile("/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/");
+                Log.d("Linea: ", linea);
+                Pattern patron = Pattern.compile("(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])");
                 //Creamos el Matcher a partir del patron, la cadena como parametro
-                Matcher encaja = patron.matcher(linea);
+                Matcher matcher = patron.matcher(linea);
 
-                String resultado = encaja.toString();
+                matcher.find();
+
+                String resultado = matcher.group(0);
 
                 Log.d("Resultado: ", resultado);
                 //Nos aseguramos de cerrar el inputStream.
