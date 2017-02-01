@@ -13,12 +13,13 @@ import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MainActivity extends Activity {
@@ -106,6 +107,10 @@ public class MainActivity extends Activity {
                         break;
                     }
                 }
+
+                Pattern patron = Pattern.compile("/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/");
+                //Creamos el Matcher a partir del patron, la cadena como parametro
+                Matcher encaja = patron.matcher("aabmanoloaabmanoloabmanolob");
 
                 //Nos aseguramos de cerrar el inputStream.
             } finally {
